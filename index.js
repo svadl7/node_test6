@@ -1,111 +1,94 @@
-// server.js
-
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
+const http = require("http");
+const path = require("path");
+const fs = require("fs");
+const mongo_client= require('mongodb').MongoClient;
+const mongoconnection_details = require('./verify/connection.js');
+const mongo_client_connection = new mongo_client(mongoconnection_details.connectionurl);
 
 const server = http.createServer((req, res) => {
-  // Serve static files from the "public" directory
-  if (req.url === '/') {
-    fs.readFile(path.join(__dirname, 'public', 'index.html'), 'utf8', (err, data) => {
-      if (err) {
-        res.writeHead(500, { 'Content-Type': 'text/plain' });
-        res.end('Internal Server Error');
-      } else {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end(data);
-      }
-    });
-  }
-  else if(req.url==='/api')
-  {
-    //https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb-how-to-get-connected-to-your-database 
-const {MongoClient} = require('mongodb');
+    if (req.url === '/') {
+        // read public.html file from public folder
+        fs.readFile(path.join(__dirname, 'public', 'index.html'),
+                    (err, content) => {
+                                    
+                                    if (err) throw err;
+                                    res.writeHead(200, { 'Content-Type': 'text/html' });
+                                    res.end(content);
+                        }
+              );
+     }
 
- 
-async function main(){
-    /**
-     * Connection URI. Update <username>, <password>, and <your-cluster-url> to reflect your cluster.
-     * See https://docs.mongodb.com/ecosystem/drivers/node/ for more details
-     */
-    const uri ="mongodb+srv://vadlamudisai1:Jaswanth3579@webtrail.o1tsui4.mongodb.net/?retryWrites=true&w=majority"
- 
+    else if (req.url === '/api') {
+        const headers =
+        {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "OPTIONS, POST, GET",
+            "Content-Type": 'application/json'
+        };
+        (async(req,res)=>{
+            try
+            {
+                await mongo_client_connection.connect();
+                const database = mongo_client_connection.db(mongoconnection_details.database);
+                const collection = database.collection(mongoconnection_details.collection);
+                if (req.method === 'GET') {
+                    var docs_json = await collection.find({}).toArray();
+                    docs_json = JSON.stringify(docs_json, null, 2);
+                    fs.writeFile('./public/db.json', docs_json, () => {});
+                    res.writeHead(200, headers);
+                    res.end(docs_json);
+                    console.log(docs_json);
+                  }
+                  else {
+                    res.writeHead(405, {'Content-Type': 'text/plain'});
+                    res.end('Method Not supported');
+                  } 
+            }catch (err) {
+                console.error(err);
+                res.writeHead(500, {'Content-Type': 'text/plain'});
+                res.end('server failed to handle the request');
+              }
+        })(req,res);
 
-    const client = new MongoClient(uri);
-      try {
-        // Connect to the MongoDB cluster
-        await client.connect();
-        console.log("Client connected successfully");
- 
 
-        await findsomedata(client);
-
-
-        // Find the listing named "Infinite Views" that we created in create.js
-        //await findOneListingByName(client, "Ribeira Charming Duplex");
- 
-    } catch (e) {
-        console.error(e);
-    } finally {
-        await client.close();
+        // read the about.html file public folder
+        // fs.readFile(
+        //     path.join(__dirname, 'public', 'about.html'),
+        //             (err, content) => {
+                                    
+        //                             if (err) throw err;
+        //                             res.writeHead(200, { 'Content-Type': 'text/html' });
+        //                             res.end(content);
+        //                 }
+        //       );
+     }
+    else if (req.url==='/api')
+    {
+        fs.readFile(
+            path.join(__dirname, 'public', 'db.json'),'utf-8',
+                    (err, content) => {
+                                    
+                                    if (err) throw err;
+                                    // Please note the content-type here is application/json
+                                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                                    res.end(content);
+                        }
+              );
+    }
+    else{
+        res.end("<h1> 404 nothing is here</h1>");
     }
 
-main().catch(console.error);
+    /*
 
+        But what if we have  1000 pages/urls ? do we need to write 1000 if-else statements?
 
-async function findsomedata(client ){
-    const cursor = client.db("Grocery_store").collection("Groceries").find({});
-    const results = await cursor.toArray();
-    console.log(results);
+    /*/
+});
 
-};
+// it will first try to look for
+// environment variable, if not found then go for 5959
+const PORT= 2306;
 
-
-    }
- 
-    
-// async function findOneListingByName( client, nameOfListing){
-//     const result = await client.db("sample_airbnb").collection("listingsAndReviews").findOne({ name: nameOfListing });
-//     if (result) {
-//         console.log(`Found a listing in the collection with the name '${nameOfListing}':`);
-//         console.log(result);
-//     } else {
-//         console.log(`No listings found with the name '${nameOfListing}'`);
-//     }
-}
-
-  else {
-    // Serve static files from the "public" directory
-    const filePath = path.join(__dirname, 'public', req.url);
-    fs.readFile(filePath, (err, data) => {
-      if (err) {
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('Not Found');
-      } else {
-        const contentType = getContentType(filePath);
-        res.writeHead(200, { 'Content-Type': contentType });
-        res.end(data);
-      }
-    });
-  }
-}).listen(2306,()=>console.log("Server is running"));;
-
-// Function to determine content type based on file extension
-function getContentType(filePath) {
-  const extname = path.extname(filePath);
-  switch (extname) {
-    case '.html':
-      return 'text/html';
-    case '.js':
-      return 'text/javascript';
-    case '.css':
-      return 'text/css';
-    case '.png':
-      return 'image/png';
-    case '.jpg':
-    case '.jpeg':
-      return 'image/jpeg';
-    default:
-      return 'application/octet-stream';
-  }
-}
+// port, callback
+server.listen(PORT,()=> console.log(`Great our server is running on port ${PORT} `));

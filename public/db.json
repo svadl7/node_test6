@@ -1,0 +1,63 @@
+[
+  {
+    "_id": "656906b087647884363f7a1f",
+    "Chips": [
+      {
+        "id": 1,
+        "Name": "Ruffles",
+        "image": "https://tse4.mm.bing.net/th?id=OIP.w-bOjkf7LR-XkfbO7hhTEwHaHa&pid=Api&P=0&h=180",
+        "Price": "1.25$",
+        "instock": false
+      },
+      {
+        "id": 2,
+        "Name": "Lays chips",
+        "image": "https://tse1.mm.bing.net/th?id=OIP.cwG_jxXIFjYs5PMxT6KWNQHaHa&pid=Api&rs=1&c=1&qlt=95&w=121&h=121",
+        "Price": "1.75$",
+        "instock": true
+      },
+      {
+        "id": 3,
+        "Name": "Doritos",
+        "image": "https://tse3.mm.bing.net/th?id=OIP._NelgOBP2lWGYBXk254YggHaHa&pid=Api&P=0&h=180",
+        "Price": "4$",
+        "instock": true
+      },
+      {
+        "id": 4,
+        "Name": "Cheetos",
+        "image": "https://tse1.mm.bing.net/th?id=OIP.6C15OHdNcbfeTKX9XI6rjAHaHa&pid=Api&P=0&h=180",
+        "Price": "3$",
+        "instock": true
+      },
+      {
+        "id": 5,
+        "Name": "Takis",
+        "image": "https://tse3.mm.bing.net/th?id=OIP.OiTUddz6HxrNsiT8fPc4IQHaH7&pid=Api&P=0&h=180",
+        "Price": "5$",
+        "instock": false
+      },
+      {
+        "id": 6,
+        "Name": "Oreo",
+        "image": "https://tse3.mm.bing.net/th?id=OIP.-tt-p8a0tp9R9s4TLwtSLwHaEg&pid=Api&P=0&h=180",
+        "Price": "2$",
+        "instock": false
+      },
+      {
+        "id": 7,
+        "Name": "Nutter Butter",
+        "image": "https://tse1.mm.bing.net/th?id=OIP.ULeTgpuVTRoBTBcRt4lJgwHaHa&pid=Api&P=0&h=180",
+        "Price": "2$",
+        "instock": false
+      },
+      {
+        "id": 8,
+        "Name": "Snickers",
+        "image": "https://tse4.explicit.bing.net/th?id=OIP.jmJe2VAT2kOAoshBR7xLuQHaDo&pid=Api&P=0&h=180",
+        "Price": "2$",
+        "instock": true
+      }
+    ]
+  }
+]
