@@ -32,7 +32,7 @@ const server = http.createServer((req, res) => {
               );
      }
 
-    else if (req.url === '/api'|| req.url==='/api/chips' ||req.url==='/api/drinks'||req.url==='/api/tobacco'||req.url==='/api/milk') {
+    else if (req.url === '/api/*') {
         const headers =
         {
             "Access-Control-Allow-Origin": "*",
