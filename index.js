@@ -32,7 +32,7 @@ const server = http.createServer((req, res) => {
               );
      }
 
-    else if (req.url === '/api/*') {
+    else if (parsedUrl.pathname.startsWith('/api/')) {
         const headers =
         {
             "Access-Control-Allow-Origin": "*",
